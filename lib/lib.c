@@ -4,7 +4,7 @@
 #define CAT(x, y, z)  CAT_(x, y, z)
 #define CAT_(x, y, z) x ## y ## z
 
-#define trim(c) do (c) = readChar(); while (c == ' ' || c == '\t' || c == '\r' || c == '\n')
+#define trim(c) do (c) = READ_CHAR(); while (c == ' ' || c == '\t' || c == '\r' || c == '\n')
 #define DIGITS(b) (      \
 	(b) == 8  ? 3  : \
 	(b) == 16 ? 6  : \
@@ -35,8 +35,8 @@ void READ_STRING (langint maxLen, char buf[static maxLen])
 {
     long i = 0;
     while (i < maxLen - 1)
-{
-        char c = readChar();
+    {
+        char c = READ_CHAR();
         buf[i] = c;
         if (buf[i] == '\n')
             break;
@@ -53,7 +53,7 @@ byte READ_BYTE (void)
     char c;
 
     trim(c);
-    for (; c > '/' && c <= '9'; c = readChar())
+    for (; c > '/' && c <= '9'; c = READ_CHAR())
         result = result * 10 + (c - '0');
     return result;
 }
@@ -68,8 +68,8 @@ langint READ_INTEGER (void)
 
     trim(c);
     if (c == '-')
-        sign = -1, c = readChar();
-    for (; c >= '0' && c <= '9'; c = readChar())
+        sign = -1, c = READ_CHAR();
+    for (; c >= '0' && c <= '9'; c = READ_CHAR())
         value = value * 10 + (c - '0');
 
     return sign * value;
@@ -79,10 +79,10 @@ langint READ_INTEGER (void)
 #if defined(READ_BOOLEAN)
 boolean READ_BOOLEAN (void)
 {
-	char buf[6];
-	buf[0] = readChar();
-	readString(buf[0] == 't' ? 4 : 5, buf);
-	return buf[0] == 't';
+    char buf[6];
+    buf[0] = READ_CHAR();
+    READ_STRING(buf[0] == 't' ? 4 : 5, buf);
+    return buf[0] == 't';
 }
 #endif
 
@@ -97,7 +97,7 @@ void WRITE_CHAR (char c)
 void WRITE_STRING (char *s)
 {
     while (*s)
-        writeChar(*s++);
+        WRITE_CHAR(*s++);
 }
 #endif
 
@@ -108,12 +108,12 @@ void WRITE_BYTE (byte n)
     char count = 0;
 
     if (n == 0)
-        return (void) writeChar('0');
+        return (void) WRITE_CHAR('0');
 
     for (; n != 0; n /= 10)
         digits[count++] = n % 10;
     while (count--)
-        writeChar(digits[count] + '0');
+        WRITE_CHAR(digits[count] + '0');
 }
 #endif
 
@@ -124,22 +124,22 @@ void WRITE_INTEGER (langint n)
     char count = 0;
 
     if (n < 0)
-        writeChar('-'), n = -n;
+        WRITE_CHAR('-'), n = -n;
     else if (n == 0)
-        return (void) writeChar('0');
+        return (void) WRITE_CHAR('0');
 
     for (; n != 0; n /= 10)
         digits[count++] = n % 10;
     while (count--)
-        writeChar(digits[count] + '0');
+        WRITE_CHAR(digits[count] + '0');
 }
 #endif
 
 #if defined(WRITE_BOOLEAN)
 void WRITE_BOOLEAN (boolean b)
 {
-	if (b) writeString("true");
-	else   writeString("false");
+    if (b) WRITE_STRING("true");
+    else   WRITE_STRING("false");
 }
 #endif
 
@@ -148,70 +148,70 @@ void WRITE_BOOLEAN (boolean b)
 #if defined(abs)
 langint ABS (langint n)
 {
-	return __builtin_labs(n);
+    return __builtin_labs(n);
 }
 #endif
 
 #if defined(fabs)
 real FABS (real r)
 {
-	return __builtin_fabs(r);
+    return __builtin_fabs(r);
 }
 #endif
 
 #if defined(sqrt)
 real SQRT (real r)
 {
-	return __builtin_sqrt(r);
+    return __builtin_sqrt(r);
 }
 #endif
 
 #if defined(sin)
 real SIN (real r)
 {
-	return __builtin_sinl(r);
+    return __builtin_sinl(r);
 }
 #endif
 
 #if defined(cos)
 real COS (real r)
 {
-	return __builtin_cosl(r);
+    return __builtin_cosl(r);
 }
 #endif
 
 #if defined(tan)
 real TAN (real r)
 {
-	return __builtin_tanl(r);
+    return __builtin_tanl(r);
 }
 #endif
 
 #if defined(arctan)
 real ARCTAN (real r)
 {
-	return __builtin_atanl(r);
+    return __builtin_atanl(r);
 }
 #endif
 
 #if defined(exp)
 real EXP (real r)
 {
-	return __builtin_exp(r);
+    return __builtin_exp(r);
 }
 #endif
 
 #if defined(ln)
 real LN (real r)
 {
-	return __builtin_log(r);
+    return __builtin_log(r);
 }
 #endif
 
 #if defined(pi)
 real PI (void)
 {
-	return __builtin_acos(-1.0);
+    return __builtin_acos(-1.0);
 }
 #endif
 
@@ -220,42 +220,42 @@ real PI (void)
 #if defined(trunc)
 langint TRUNC (real r)
 {
-	return __builtin_trunc(r);
+    return __builtin_trunc(r);
 }
 #endif
 
 #if defined(round)
 langint ROUND (real r)
 {
-	return __builtin_llround(r);
+    return __builtin_llround(r);
 }
 #endif
 
 #if defined(ord)
 langint ORD (char c)
 {
-	return (langint)(c);
+    return (langint)(c);
 }
 #endif
 
 #if defined(CHR)
 char CHR (langint n)
 {
-	return (char)(n);
+    return (char)(n);
 }
 #endif
 
 #if defined(EXTEND)
 langint EXTEND (byte b)
 {
-	return (langint)b;
+    return (langint)b;
 }
 #endif
 
 #if defined(SHRINK)
 byte SHRINK (langint n)
 {
-	return (byte)n;
+    return (byte)n;
 }
 #endif
 
